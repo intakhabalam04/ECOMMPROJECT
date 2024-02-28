@@ -7,6 +7,8 @@ const bcrypt = require('bcryptjs')
 
 const app = express()
 
+app.use(express.json())
+
 
 mongoose.connect(db_config.DB_URL)
 const db=mongoose.connection
@@ -44,6 +46,8 @@ async function init(){
     }
 
 }
+
+require('./routes/auth.route')(app)
 
 app.listen(server_config.PORT, () => {
     console.log("Server started at port num: " + server_config.PORT)
