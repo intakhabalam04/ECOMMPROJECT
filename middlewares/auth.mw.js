@@ -1,4 +1,6 @@
 const user_model = require('../models/user.model')
+const jwt = require('jsonwebtoken')
+const auth_config = require('../configs/auth.config')
 
 const verifySignUpBody = async (req, res, next) => {
     try {
@@ -17,9 +19,9 @@ const verifySignUpBody = async (req, res, next) => {
                 message: 'Failed ! userId was not provided in the body'
             })
         }
-        if(!req.body.password){
+        if (!req.body.password) {
             return res.status(400).send({
-                message : 'Failed ! password was not provided in the body'
+                message: 'Failed ! password was not provided in the body'
             })
         }
 
@@ -51,22 +53,72 @@ const verifySignUpBody = async (req, res, next) => {
     }
 }
 
-const verifySignInBody = (req,res,next)=>{
-    if(!req.body.userId){
+const verifySignInBody = (req, res, next) => {
+    if (!req.body.userId) {
         return res.status(400).send({
-            message : 'UserId is not provided'
+            message: 'UserId is not provided'
         })
     }
-    if(!req.body.password){
+    if (!req.body.password) {
         return res.status(400).send({
-            message : 'Password is not provided'
+            message: 'Password is not provided'
         })
     }
     next()
 }
 
+const verifyToken = (req, res, next) => {
+    const token = req.headers['x-access-token'];
+
+    if (!token) {
+        return res.status(403).send({
+            message: 'No token found: Unauthorized!'
+        });
+    }
+
+    jwt.verify(token, auth_config.secret, async (err, decoded) => {
+        if (err) {
+            console.error('Error while verifying token:', err)
+            return res.status(401).send({
+                message: 'Unauthorized!'
+            });
+        }
+
+        try {
+            const user = await user_model.findOne({ userId: decoded.id });
+
+            if (!user) {
+                return res.status(401).send({
+                    message: 'Unauthorized!'
+                });
+            }
+            req.user = user
+            next();
+        } catch (error) {
+            // console.error('Error while querying database:', error);
+            return res.status(500).send({
+                message: 'Internal Server Error'
+            });
+        }
+    });
+};
+
+const isAdmin = (req,res,next)=>{
+    const user= req.user
+
+    if(user && user.userType==='ADMIN'){
+        next()
+    }else {
+        return res.status(403).send({
+            message : 'Only admin users are allowed to access this point'
+        })
+    }
+}
+
 module.exports = {
     verifySignUpBody: verifySignUpBody,
-    verifySignInBody:verifySignInBody
+    verifySignInBody: verifySignInBody,
+    verifyToken: verifyToken,
+    isAdmin:isAdmin
 }
 
