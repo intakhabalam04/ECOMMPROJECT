@@ -11,38 +11,38 @@ app.use(express.json())
 
 
 mongoose.connect(db_config.DB_URL)
-const db=mongoose.connection
-db.on('error',()=>{
+const db = mongoose.connection
+db.on('error', () => {
     console.log('error while connecting to the database')
 })
-db.once('open',()=>{
+db.once('open', () => {
     console.log('Connected to the mongoDB')
     init()
 })
 
-async function init(){
-    let user =await user_model.findOne({userType : 'ADMIN'})
+async function init() {
+    let user = await user_model.findOne({userType: 'ADMIN'})
     try {
         if (user) {
             console.log('Admin is already present')
             return;
         }
-    }catch (err){
-        console.log('Error while reading the data '+err)
+    } catch (err) {
+        console.log('Error while reading the data ' + err)
     }
 
     try {
         user = await user_model.create({
-            name : 'Admin',
-            userId : 'admin',
-            email : 'admin@gmail.com',
-            userType : 'ADMIN',
-            password : bcrypt.hashSync('welcome1',8)
+            name: 'Admin',
+            userId: 'admin',
+            email: 'admin@gmail.com',
+            userType: 'ADMIN',
+            password: bcrypt.hashSync('welcome1', 8)
         })
 
-        console.log('Admin created ',user)
-    }catch (e){
-        console.log('Error while create admin',e)
+        console.log('Admin created ', user)
+    } catch (e) {
+        console.log('Error while create admin', e)
     }
 
 }
