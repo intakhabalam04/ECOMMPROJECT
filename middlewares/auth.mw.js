@@ -78,7 +78,7 @@ const verifyToken = (req, res, next) => {
 
     jwt.verify(token, auth_config.secret, async (err, decoded) => {
         if (err) {
-            console.error('Error while verifying token:', err)
+            console.log('Error while verifying token:'+ err)
             return res.status(401).send({
                 message: 'Unauthorized!'
             });
@@ -97,7 +97,7 @@ const verifyToken = (req, res, next) => {
         } catch (error) {
             // console.error('Error while querying database:', error);
             return res.status(500).send({
-                message: 'Internal Server Error'
+                message: 'Internal Server Error '+error
             });
         }
     });

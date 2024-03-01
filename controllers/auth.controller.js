@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
         expiresIn: 600
     })
 
-
+    console.log(token)
 
     return res.status(200).send({
         // message: 'Successfully login'
