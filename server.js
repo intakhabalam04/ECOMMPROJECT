@@ -9,7 +9,6 @@ const app = express()
 
 app.use(express.json())
 
-
 mongoose.connect(db_config.DB_URL)
 const db = mongoose.connection
 db.on('error', () => {
@@ -25,7 +24,7 @@ async function init() {
     try {
         if (user) {
             console.log('Admin is already present')
-            return;
+            return ;
         }
     } catch (err) {
         console.log('Error while reading the data ' + err)

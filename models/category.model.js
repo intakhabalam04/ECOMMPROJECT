@@ -8,7 +8,10 @@ const categorySchema = new mongoose.Schema({
     }, description: {
         type: String,
         required: true
-    }
+    },products :[{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'product.model'
+    }]
 }, {
     timestamps: true,
     versionKey: false

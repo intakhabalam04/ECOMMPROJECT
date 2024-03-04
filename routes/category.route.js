@@ -8,7 +8,7 @@ module.exports = (app) => {
         auth_mw.isAdmin,
         category_mw.verifyCategoryBody
     ], category_controller.createNewCategory)
-    app.get('/ecomm/api/v1/allcategories', category_controller.displayAllCategory)
+    app.get('/ecomm/api/v1/categories', category_controller.displayAllCategory)
     app.get('/ecomm/api/v1/category/:name', category_controller.displayCategory)
     app.put('/ecomm/api/v1/updatecategories/:name', [auth_mw.verifyToken, auth_mw.isAdmin], category_controller.updateCategory)
     app.delete('/ecomm/api/v1/deletecategory/:name', [auth_mw.verifyToken, auth_mw.isAdmin], category_controller.deleteCategory)

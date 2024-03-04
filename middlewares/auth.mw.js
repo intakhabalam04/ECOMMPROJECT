@@ -68,7 +68,7 @@ const verifySignInBody = (req, res, next) => {
 }
 
 const verifyToken = (req, res, next) => {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['x-access-token']
 
     if (!token) {
         return res.status(403).send({
@@ -105,7 +105,6 @@ const verifyToken = (req, res, next) => {
 
 const isAdmin = (req,res,next)=>{
     const user= req.user
-
     if(user && user.userType==='ADMIN'){
         next()
     }else {
